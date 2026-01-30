@@ -1,10 +1,20 @@
 [
-    {
-        "time": "Weekend",
-        "name": "No news scheduled for today",
-        "currency": "N/A",
-        "actual": "",
-        "forecast": "",
-        "previous": ""
-    }
+  {
+    "time": "LIVE TEST",
+    "name": "Massive Gains for Lumina Extension",
+    "currency": "USD",
+    "actual": "99% Success",
+    "forecast": "50%",
+    "previous": "10%",
+    "impact": "High"
+  },
+  {
+    "time": "14:30",
+    "name": "EUR Interest Rate Decision",
+    "currency": "EUR",
+    "actual": "4.50%",
+    "forecast": "4.25%",
+    "previous": "4.25%",
+    "impact": "High"
+  }
 ]
