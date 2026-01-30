@@ -1,36 +1,39 @@
-name: Hourly News Update
+name: Super Fast News Update
 
 on:
   schedule:
-    - cron: '0 * * * *' # This means "at the start of every hour"
-  workflow_dispatch: # This adds a button so you can run it manually to test
+    # This runs every 5 minutes (the fastest GitHub allows)
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # This adds a manual "Run" button for you to test
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # We must give GitHub permission to "write" the news into our data.json file
+    
+    # This is the "Key" that lets the robot write to your data.json file
     permissions:
       contents: write
       
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4 # This lets the robot see your files
+      - name: Checkout repository
+        uses: actions/checkout@v4
         
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
           
-      - name: Install Tools
-        run: pip install requests beautifulsoup4 # The tools the robot needs to scrape
+      - name: Install Scraper Tools
+        run: pip install requests beautifulsoup4
         
-      - name: Run the Robot
-        run: python scrape.py # Runs your script
+      - name: Run the Scraper
+        run: python scrape.py
         
-      - name: Save the News
+      - name: Save and Push News
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git commit -m "Updated the news" || exit 0
+          # This line prevents errors if the news hasn't changed
+          git commit -m "Auto-update: Fresh News" || exit 0
           git push
