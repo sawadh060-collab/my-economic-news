@@ -1,1 +1,10 @@
-[]
+[
+    {
+        "time": "Weekend",
+        "name": "No news scheduled for today",
+        "currency": "N/A",
+        "actual": "",
+        "forecast": "",
+        "previous": ""
+    }
+]
