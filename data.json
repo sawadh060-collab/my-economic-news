@@ -1,7 +1,7 @@
 [
     {
         "time": "15:30",
-        "name": "Non-Farm Employment Change",
+        "name": "Non-Farm Payrolls (NFP)",
         "currency": "USD",
         "impact": "High",
         "actual": "225K",
@@ -10,33 +10,23 @@
         "previous": "150K"
     },
     {
-        "time": "16:00",
-        "name": "ISM Services PMI",
-        "currency": "USD",
-        "impact": "High",
-        "actual": "52.5",
+        "time": "11:00",
+        "name": "German ZEW Economic Sentiment",
+        "currency": "EUR",
+        "impact": "Medium",
+        "actual": "12.5",
         "actual_status": "worse",
-        "forecast": "53.0",
-        "previous": "51.8"
+        "forecast": "15.0",
+        "previous": "13.2"
     },
     {
-        "time": "12:45",
-        "name": "Main Refinancing Rate",
+        "time": "08:00",
+        "name": "German Import Prices",
         "currency": "EUR",
-        "impact": "High",
-        "actual": "4.50%",
+        "impact": "Low",
+        "actual": "0.1%",
         "actual_status": "neutral",
-        "forecast": "4.50%",
-        "previous": "4.50%"
-    },
-    {
-        "time": "13:30",
-        "name": "ECB Press Conference",
-        "currency": "EUR",
-        "impact": "High",
-        "actual": "Speech",
-        "actual_status": "neutral",
-        "forecast": "",
-        "previous": ""
+        "forecast": "0.1%",
+        "previous": "-0.2%"
     }
 ]
