@@ -1,10 +1,29 @@
 [
-    {
-        "time": "Weekend",
-        "name": "No news scheduled for today",
-        "currency": "N/A",
-        "actual": "",
-        "forecast": "",
-        "previous": ""
-    }
+  {
+    "time": "14:30",
+    "name": "USD Unemployment Claims",
+    "currency": "USD",
+    "impact": "high",
+    "actual": "210K",
+    "forecast": "185K",
+    "previous": "198K"
+  },
+  {
+    "time": "16:00",
+    "name": "USD ISM Manufacturing PMI",
+    "currency": "USD",
+    "impact": "medium",
+    "actual": "52.4",
+    "forecast": "52.1",
+    "previous": "51.4"
+  },
+  {
+    "time": "10:00",
+    "name": "EUR CPI (YoY)",
+    "currency": "EUR",
+    "impact": "high",
+    "actual": "2.8%",
+    "forecast": "2.7%",
+    "previous": "2.9%"
+  }
 ]
