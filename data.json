@@ -1,1 +1,42 @@
-[]
+[
+    {
+        "time": "15:30",
+        "name": "Non-Farm Employment Change",
+        "currency": "USD",
+        "impact": "High",
+        "actual": "225K",
+        "actual_status": "better",
+        "forecast": "180K",
+        "previous": "150K"
+    },
+    {
+        "time": "14:15",
+        "name": "ECB Monetary Policy Press Conference",
+        "currency": "EUR",
+        "impact": "High",
+        "actual": "Speech",
+        "actual_status": "neutral",
+        "forecast": "",
+        "previous": ""
+    },
+    {
+        "time": "10:30",
+        "name": "Consumer Price Index m/m",
+        "currency": "GBP",
+        "impact": "Medium",
+        "actual": "0.2%",
+        "actual_status": "worse",
+        "forecast": "0.4%",
+        "previous": "0.3%"
+    },
+    {
+        "time": "02:30",
+        "name": "Retail Sales y/y",
+        "currency": "AUD",
+        "impact": "Low",
+        "actual": "1.5%",
+        "actual_status": "neutral",
+        "forecast": "1.5%",
+        "previous": "1.2%"
+    }
+]
