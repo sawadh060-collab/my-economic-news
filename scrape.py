@@ -1,84 +1,43 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import sys
 
-# URL forced to GMT/UTC (Timezone ID 1) for universal compatibility
-URL = "https://www.investing.com/economic-calendar/?timezone=1"
-
-# Real browser headers to prevent "403 Forbidden" errors
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://www.google.com/",
-    "X-Requested-With": "XMLHttpRequest"
-}
-
-def scrape_investing():
-    print("Connecting to Investing.com...")
-    try:
-        response = requests.get(URL, headers=HEADERS, timeout=15)
-        response.raise_for_status()
-    except Exception as e:
-        print(f"Network Error: {e}")
-        sys.exit(1)
-
-    soup = BeautifulSoup(response.content, 'html.parser')
+def get_news():
+    url = "https://www.forexfactory.com/calendar?day=today"
+    headers = {"User-Agent": "Mozilla/5.0"}
     
-    # Target the main calendar table
-    table = soup.find('table', {'id': 'economicCalendarData'})
-    if not table:
-        print("Error: Could not find calendar table. Investing.com might have updated their layout.")
-        sys.exit(1)
-
-    rows = table.find_all('tr', {'class': 'js-event-item'})
-    news_data = []
-
-    for row in rows:
-        try:
-            # 1. Extract UTC Timestamp from data attribute
-            # Format usually: 2026/01/31 15:30:00
-            raw_dt = row.get('data-event-datetime')
-            if not raw_dt: continue
+    try:
+        response = requests.get(url, headers=headers)
+        soup = BeautifulSoup(response.content, "html.parser")
+        news_list = []
+        
+        for row in soup.select("tr.calendar__row"):
+            event_tag = row.select_one(".calendar__event")
+            if not event_tag: continue
             
-            # Format for JS compatibility (YYYY-MM-DDTHH:MM:SSZ)
-            utc_time = raw_dt.replace("/", "-") + "Z"
+            # Detect Actual color/status
+            actual_tag = row.select_one(".calendar__actual")
+            actual_status = "neutral"
+            if actual_tag:
+                # Forex Factory uses these classes for green/red numbers
+                if "better" in actual_tag.get("class", []): actual_status = "better"
+                elif "worse" in actual_tag.get("class", []): actual_status = "worse"
 
-            # 2. Extract Currency and Event Name
-            currency = row.find('td', {'class': 'flagCur'}).text.strip()
-            event_text = row.find('td', {'class': 'event'}).text.strip()
-
-            # 3. Extract Importance (Count Bull Icons)
-            # Investing.com uses 'grayFullBullishIcon' for active levels
-            sentiment_td = row.find('td', {'class': 'sentiment'})
-            impact = len(sentiment_td.find_all('i', {'class': 'grayFullBullishIcon'}))
-
-            # 4. Extract Actual/Forecast/Previous
-            actual = row.find('td', {'id': lambda x: x and x.startswith('eventActual')}).text.strip()
-            forecast = row.find('td', {'id': lambda x: x and x.startswith('eventForecast')}).text.strip()
-            previous = row.find('td', {'id': lambda x: x and x.startswith('eventPrevious')}).text.strip()
-
-            news_data.append({
-                "time": utc_time,
-                "currency": currency,
-                "event": event_text,
-                "impact": impact,
-                "actual": actual if actual else "",
-                "forecast": forecast if forecast else "",
-                "previous": previous if previous else ""
+            news_list.append({
+                "time": row.select_one(".calendar__time").text.strip() if row.select_one(".calendar__time") else "---",
+                "name": event_tag.text.strip(),
+                "currency": row.select_one(".calendar__currency").text.strip() if row.select_one(".calendar__currency") else "---",
+                "actual": actual_tag.text.strip() if actual_tag else "",
+                "actual_status": actual_status, # NEW: This tells the widget if it's Green or Red
+                "forecast": row.select_one(".calendar__forecast").text.strip() if row.select_one(".calendar__forecast") else "",
+                "previous": row.select_one(".calendar__previous").text.strip() if row.select_one(".calendar__previous") else "",
             })
-        except Exception as e:
-            print(f"Skipping row due to error: {e}")
-            continue
 
-    # Final Save
-    if news_data:
-        with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump(news_data, f, indent=2, ensure_ascii=False)
-        print(f"Success! Saved {len(news_data)} events to data.json.")
-    else:
-        print("No news data found.")
-        sys.exit(1)
+        with open("data.json", "w") as f:
+            json.dump(news_list, f, indent=4)
+            
+    except Exception as e:
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
-    scrape_investing()
+    get_news()
