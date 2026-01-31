@@ -3,7 +3,7 @@
         "time": "15:30",
         "name": "Non-Farm Payrolls (NFP)",
         "currency": "USD",
-        "impact": "High",
+        "impact": "low",
         "actual": "225K",
         "actual_status": "better",
         "forecast": "180K",
