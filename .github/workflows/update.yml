@@ -29,5 +29,5 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add data.json
-          git commit -m "Auto-update news from Investing.com" || exit 0
+          git commit -m "Auto-update news from forexfactory.com" || exit 0
           git push
