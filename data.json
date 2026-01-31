@@ -1,42 +1,42 @@
 [
   {
-    "time": "2026-01-30T13:30:00Z",
+    "time": "2026-01-31T13:30:00Z",
     "currency": "USD",
-    "name": "Core PCE Price Index (MoM)",
+    "name": "Non-Farm Payrolls (NFP)",
     "impact": 3,
-    "actual": "0.3%",
-    "actual_status": "worse",
-    "forecast": "0.2%",
-    "previous": "0.2%"
-  },
-  {
-    "time": "2026-01-31T09:00:00Z",
-    "currency": "EUR",
-    "name": "German Unemployment Rate",
-    "impact": 3,
-    "actual": "6.3%",
-    "actual_status": "neutral",
-    "forecast": "6.3%",
-    "previous": "6.3%"
-  },
-  {
-    "time": "2026-01-31T10:00:00Z",
-    "currency": "EUR",
-    "name": "Eurozone CPI (YoY) Prelim",
-    "impact": 3,
-    "actual": "2.1%",
+    "actual": "225K",
     "actual_status": "better",
-    "forecast": "2.3%",
-    "previous": "2.2%"
+    "forecast": "180K",
+    "previous": "150K"
   },
   {
-    "time": "2026-02-02T15:00:00Z",
+    "time": "2026-01-31T14:45:00Z",
     "currency": "USD",
-    "name": "ISM Manufacturing PMI",
+    "name": "Chicago PMI",
+    "impact": 2,
+    "actual": "44.0",
+    "actual_status": "worse",
+    "forecast": "46.2",
+    "previous": "45.0"
+  },
+  {
+    "time": "2026-01-31T16:00:00Z",
+    "currency": "EUR",
+    "name": "Consumer Confidence",
+    "impact": 1,
+    "actual": "-15",
+    "actual_status": "neutral",
+    "forecast": "-15",
+    "previous": "-17"
+  },
+  {
+    "time": "2026-02-01T10:00:00Z",
+    "currency": "EUR",
+    "name": "ECB President Lagarde Speaks",
     "impact": 3,
     "actual": "",
     "actual_status": "neutral",
-    "forecast": "48.5",
-    "previous": "47.2"
+    "forecast": "",
+    "previous": ""
   }
 ]
