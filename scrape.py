@@ -1,43 +1,64 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+from datetime import datetime
 
-def get_news():
-    url = "https://www.forexfactory.com/calendar?day=today"
-    headers = {"User-Agent": "Mozilla/5.0"}
-    
-    try:
-        response = requests.get(url, headers=headers)
-        soup = BeautifulSoup(response.content, "html.parser")
-        news_list = []
-        
-        for row in soup.select("tr.calendar__row"):
-            event_tag = row.select_one(".calendar__event")
-            if not event_tag: continue
-            
-            # Detect Actual color/status
-            actual_tag = row.select_one(".calendar__actual")
-            actual_status = "neutral"
-            if actual_tag:
-                # Forex Factory uses these classes for green/red numbers
-                if "better" in actual_tag.get("class", []): actual_status = "better"
-                elif "worse" in actual_tag.get("class", []): actual_status = "worse"
+# URL forced to GMT (Timezone ID 1) to ensure global compatibility
+URL = "https://www.investing.com/economic-calendar/?timezone=1"
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "X-Requested-With": "XMLHttpRequest"
+}
 
-            news_list.append({
-                "time": row.select_one(".calendar__time").text.strip() if row.select_one(".calendar__time") else "---",
-                "name": event_tag.text.strip(),
-                "currency": row.select_one(".calendar__currency").text.strip() if row.select_one(".calendar__currency") else "---",
-                "actual": actual_tag.text.strip() if actual_tag else "",
-                "actual_status": actual_status, # NEW: This tells the widget if it's Green or Red
-                "forecast": row.select_one(".calendar__forecast").text.strip() if row.select_one(".calendar__forecast") else "",
-                "previous": row.select_one(".calendar__previous").text.strip() if row.select_one(".calendar__previous") else "",
+def scrape_investing():
+    response = requests.get(URL, headers=HEADERS)
+    if response.status_code != 200:
+        print("Failed to fetch data")
+        return
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+    table = soup.find('table', {'id': 'economicCalendarData'})
+    rows = table.find_all('tr', {'class': 'js-event-item'})
+
+    news_data = []
+
+    for row in rows:
+        try:
+            # 1. Extract UTC Timestamp
+            # Investing.com provides a data-event-datetime attribute
+            raw_time = row.get('data-event-datetime').replace('/', '-')
+            utc_time = f"{raw_time}:00Z" # Adding 'Z' makes it a formal UTC string
+
+            # 2. Extract Currency & Event
+            curr = row.find('td', {'class': 'flagCur'}).text.strip()
+            event = row.find('td', {'class': 'event'}).text.strip()
+
+            # 3. Extract Impact (Bulls)
+            # We count how many 'full' bull icons are in the sentiment div
+            sentiment_td = row.find('td', {'class': 'sentiment'})
+            bulls = len(sentiment_td.find_all('i', {'class': 'grayFullBullishIcon'}))
+
+            # 4. Extract Numbers
+            actual = row.find('td', {'id': lambda x: x and x.startswith('eventActual')}).text.strip()
+            forecast = row.find('td', {'id': lambda x: x and x.startswith('eventForecast')}).text.strip()
+            previous = row.find('td', {'id': lambda x: x and x.startswith('eventPrevious')}).text.strip()
+
+            news_data.append({
+                "time": utc_time,
+                "currency": curr,
+                "event": event,
+                "impact": bulls,
+                "actual": actual,
+                "forecast": forecast,
+                "previous": previous
             })
+        except (AttributeError, TypeError):
+            continue # Skip rows that aren't actual news events
 
-        with open("data.json", "w") as f:
-            json.dump(news_list, f, indent=4)
-            
-    except Exception as e:
-        print(f"Error: {e}")
+    # Save to JSON for GitHub
+    with open('data.json', 'w') as f:
+        json.dump(news_data, f, indent=2)
+    print(f"Successfully scraped {len(news_data)} events.")
 
 if __name__ == "__main__":
-    get_news()
+    scrape_investing()
