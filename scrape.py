@@ -3,56 +3,34 @@ from bs4 import BeautifulSoup
 import json
 
 def get_news():
-    # Force 'today' view to ensure we get the latest data
     url = "https://www.forexfactory.com/calendar?day=today"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept-Language": "en-US,en;q=0.9"
-    }
+    headers = {"User-Agent": "Mozilla/5.0"}
     
     try:
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.content, "html.parser")
         news_list = []
         
-        rows = soup.select("tr.calendar__row")
-        
-        for row in rows:
+        for row in soup.select("tr.calendar__row"):
             event_tag = row.select_one(".calendar__event")
-            if not event_tag:
-                continue
+            if not event_tag: continue
             
-            # --- NEW: Impact Folder Detection ---
-            impact_tag = row.select_one(".calendar__impact span")
-            impact_level = "None"
-            if impact_tag:
-                # Forex Factory uses classes like 'high', 'medium', 'low' for the folders
-                impact_class = " ".join(impact_tag.get("class", [])).lower()
-                if "high" in impact_class:
-                    impact_level = "High"
-                elif "medium" in impact_class:
-                    impact_level = "Medium"
-                elif "low" in impact_class:
-                    impact_level = "Low"
-                
-            news_item = {
+            # Detect Actual color/status
+            actual_tag = row.select_one(".calendar__actual")
+            actual_status = "neutral"
+            if actual_tag:
+                # Forex Factory uses these classes for green/red numbers
+                if "better" in actual_tag.get("class", []): actual_status = "better"
+                elif "worse" in actual_tag.get("class", []): actual_status = "worse"
+
+            news_list.append({
                 "time": row.select_one(".calendar__time").text.strip() if row.select_one(".calendar__time") else "---",
                 "name": event_tag.text.strip(),
                 "currency": row.select_one(".calendar__currency").text.strip() if row.select_one(".calendar__currency") else "---",
-                "impact": impact_level, # This feeds your Accent Bar color!
-                "actual": row.select_one(".calendar__actual").text.strip() if row.select_one(".calendar__actual") else "",
+                "actual": actual_tag.text.strip() if actual_tag else "",
+                "actual_status": actual_status, # NEW: This tells the widget if it's Green or Red
                 "forecast": row.select_one(".calendar__forecast").text.strip() if row.select_one(".calendar__forecast") else "",
                 "previous": row.select_one(".calendar__previous").text.strip() if row.select_one(".calendar__previous") else "",
-            }
-            news_list.append(news_item)
-
-        if not news_list:
-            news_list.append({
-                "time": "Weekend",
-                "name": "No news scheduled for today",
-                "currency": "N/A",
-                "impact": "None",
-                "actual": "", "forecast": "", "previous": ""
             })
 
         with open("data.json", "w") as f:
