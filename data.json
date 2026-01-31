@@ -3,30 +3,30 @@
         "time": "15:30",
         "name": "Non-Farm Payrolls (NFP)",
         "currency": "USD",
-        "impact": "low",
+        "impact": "High",
         "actual": "225K",
         "actual_status": "better",
         "forecast": "180K",
         "previous": "150K"
     },
     {
-        "time": "10:30",
-        "name": "CPI m/m",
-        "currency": "GBP",
+        "time": "11:00",
+        "name": "German ZEW Economic Sentiment",
+        "currency": "EUR",
         "impact": "Medium",
-        "actual": "0.2%",
+        "actual": "12.5",
         "actual_status": "worse",
-        "forecast": "0.4%",
-        "previous": "0.3%"
+        "forecast": "15.0",
+        "previous": "13.2"
     },
     {
-        "time": "02:30",
-        "name": "Retail Sales",
-        "currency": "AUD",
+        "time": "08:00",
+        "name": "German Import Prices",
+        "currency": "EUR",
         "impact": "Low",
-        "actual": "1.5%",
+        "actual": "0.1%",
         "actual_status": "neutral",
-        "forecast": "1.5%",
-        "previous": "1.2%"
+        "forecast": "0.1%",
+        "previous": "-0.2%"
     }
 ]
